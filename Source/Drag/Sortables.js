@@ -117,13 +117,16 @@ var Sortables = new Class({
 	},
 
 	insert: function(dragging, element){
-		var where = 'inside';
+		var where = null;
 		if (this.lists.contains(element)){
+			where = 'inside';
 			this.list = element;
 			this.drag.droppables = this.getDroppables();
 		} else {
-			where = this.element.getAllPrevious().contains(element) ? 'before' : 'after';
+			if (this.element.getAllPrevious().contains(element)) where = 'before';
+			if (this.element.getAllNext().contains(element)) where = 'after';
 		}
+		if (!where) return;
 		this.element.inject(element, where);
 		this.fireEvent('sort', [this.element, this.clone]);
 	},
